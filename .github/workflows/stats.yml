@@ -1,0 +1,21 @@
+name: Workflow run stats
+
+on:
+  repository_dispatch:
+    types: [trigger-stats]
+
+jobs:
+  post-stats:
+    runs-on: ubuntu-latest
+    env:
+      HUSKY: '0'
+    steps:
+      # Must check out the repository
+      # to run this own action from `main`
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build stats step
+        uses: ./
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          workflowId: main.yml

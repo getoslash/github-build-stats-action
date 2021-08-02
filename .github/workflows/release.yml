@@ -1,0 +1,31 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - '!*'
+
+jobs:
+  chrome:
+    name: Publish release tag and changelog
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.TOKEN }}
+      HUSKY: '0'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Install Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: lts/*
+      - name: Install dependencies
+        run: npm ci
+      # Build everything so that gets added to the project as well.
+      # For Actions, we'll need the fully compiled output (in `dist/`)
+      - name: Build everything
+        run: npm run build
+      - name: Generate release notes
+        run: npm run release

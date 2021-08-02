@@ -1,0 +1,6 @@
+.eslintrc.js
+commitlint.config.js
+.releaserc.json
+dist
+lib
+node_modules

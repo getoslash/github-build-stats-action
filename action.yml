@@ -1,0 +1,19 @@
+name: 'GitHub Build Stats'
+description: 'Get insights into your workflow run times'
+author: 'OSlash Open Source'
+inputs:
+  token:
+    description: 'GitHub API token'
+    required: true
+  workflowId:
+    description: 'Workflow ID (use the workflow file name)'
+    required: true
+  pullRequest:
+    description: 'Pull request number (optional)'
+    required: false
+outputs:
+  stats:
+    description: 'GitHub workflow run time statistics'
+runs:
+  using: 'node12'
+  main: 'dist/index.js'

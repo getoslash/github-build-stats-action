@@ -1,0 +1,35 @@
+name: Check PR
+
+on: [pull_request]
+
+jobs:
+  test:
+    name: Run all tests
+    runs-on: ubuntu-latest
+    env:
+      HUSKY: '0'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Install Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: lts/*
+      - name: Install dependencies
+        uses: npm ci
+      - name: Check language
+        uses: brown-ccv/alex-recommends@v1.2.1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          message_id: 'alex'
+          profanity_sureness: 1
+      - name: Lint code
+        run: npm run lint
+      - name: Run tests
+        run: npm run test
+      - name: Trigger build stats action
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.TOKEN }}
+          client-payload: '{"pull_request": {"number": "${{ github.event.number }}"}}'
+          event-type: trigger-stats
