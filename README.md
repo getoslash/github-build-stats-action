@@ -2,8 +2,7 @@
 
 [![GitHub release](https://img.shields.io/github/release/getoslash/github-build-stats-action.svg)](https://github.com/getoslash/github-build-stats-action/releases)
 [![CI](https://github.com/getoslash/github-build-stats-action/workflows/release/badge.svg)](https://github.com/getoslash/github-build-stats-action/actions?query=workflow%3Arelease)
-![Code Coverage](https://img.shields.io/codecov/c/github/getoslash/github-build-stats-action?logo=CodeCov&token=123)
-![License](https://img.shields.io/github/license/getoslash/github-build-stats-action)
+[![codecov](https://codecov.io/gh/getoslash/github-build-stats-action/branch/main/graph/badge.svg?token=DLMB769FFM)](https://codecov.io/gh/getoslash/github-build-stats-action)
 [![Open in Visual Studio Code](https://open.vscode.dev/badges/open-in-vscode.svg)](https://open.vscode.dev/getoslash/github-build-stats-action)
 
 This action gets you detailed statistics of your workflow runs.
