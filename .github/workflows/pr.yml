@@ -31,7 +31,7 @@ jobs:
       - name: Trigger build stats action
         uses: peter-evans/repository-dispatch@v1
         with:
-          token: ${{ secrets.TOKEN }}
+          token: ${{ secrets.OSLASH_BOT_TOKEN }}
           client-payload: '{"pull_request": {"number": "${{ github.event.number }}"}}'
           event-type: trigger-stats
       - uses: codecov/codecov-action@v1

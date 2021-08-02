@@ -12,7 +12,7 @@ jobs:
     name: Publish release tag and changelog
     runs-on: ubuntu-latest
     env:
-      GITHUB_TOKEN: ${{ secrets.TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.OSLASH_BOT_TOKEN }}
       HUSKY: '0'
     steps:
       - name: Checkout code
