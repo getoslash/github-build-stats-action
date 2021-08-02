@@ -1,8 +1,9 @@
 name: 'GitHub Build Stats'
 description: 'Get insights into your workflow run times'
 author: 'OSlash Open Source'
-icon: 'pie-chart'
-color: green
+branding:
+  icon: 'pie-chart'
+  color: green
 inputs:
   token:
     description: 'GitHub API token'
