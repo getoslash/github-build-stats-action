@@ -8,6 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       HUSKY: '0'
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -33,3 +34,9 @@ jobs:
           token: ${{ secrets.TOKEN }}
           client-payload: '{"pull_request": {"number": "${{ github.event.number }}"}}'
           event-type: trigger-stats
+      - uses: codecov/codecov-action@v1
+        with:
+          files: coverage/lcov.info
+          flags: unittests
+          fail_ci_if_error: true
+          verbose: true
