@@ -16,7 +16,7 @@ jobs:
         with:
           node-version: lts/*
       - name: Install dependencies
-        uses: npm ci
+        run: npm ci
       - name: Check language
         uses: brown-ccv/alex-recommends@v1.2.1
         with:
