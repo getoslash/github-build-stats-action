@@ -15,6 +15,9 @@ const FIXTURES = {
   WORKFLOW_RUNS: import('./fixtures/main/runs.json'),
 } as const
 
+/** `@actions/core > setFailed()` sets the process exit code to 1, so this method helps reset it.  */
+const unsetGitHubCoreFailed = () => (process.exitCode = 0)
+
 const interceptGetWorkflowRuns = (): Interceptor => {
   return nock('https://api.github.com', {
     reqheaders: {
@@ -42,7 +45,7 @@ const mockPostIssueComment = (number: number, returnData: Body) => {
     .reply(200, returnData)
 }
 
-test('🧪 main() should return the constructed PR message body', async (t) => {
+test('🧪 run() should return the constructed PR message body', async (t) => {
   t.plan(1)
   nock.disableNetConnect()
   const outputHook = hookStd(
@@ -54,6 +57,9 @@ test('🧪 main() should return the constructed PR message body', async (t) => {
     () => {}
     /* eslint-enable @typescript-eslint/no-empty-function */
   )
+  t.teardown(() => {
+    outputHook.unhook()
+  })
   // @ts-ignore -- GitHub contexts are actually wildly complex to type correctly.
   const context = (await FIXTURES.CONTEXT) as Context
   const workflowRuns = (await FIXTURES.WORKFLOW_RUNS).default
@@ -76,10 +82,11 @@ test('🧪 main() should return the constructed PR message body', async (t) => {
   )
   nock.enableNetConnect()
   nock.cleanAll()
+  unsetGitHubCoreFailed()
   t.end()
 })
 
-test('🧪 main() should return the constructed PR message body for a given PR number', async (t) => {
+test('🧪 run() should return the constructed PR message body for a given PR number', async (t) => {
   t.plan(1)
   nock.disableNetConnect()
   const outputHook = hookStd(
@@ -91,6 +98,9 @@ test('🧪 main() should return the constructed PR message body for a given PR n
     () => {}
     /* eslint-enable @typescript-eslint/no-empty-function */
   )
+  t.teardown(() => {
+    outputHook.unhook()
+  })
   // @ts-ignore -- GitHub contexts are actually wildly complex to type correctly.
   const context = (await FIXTURES.CONTEXT) as Context
   const workflowRuns = (await FIXTURES.WORKFLOW_RUNS).default
@@ -115,11 +125,11 @@ test('🧪 main() should return the constructed PR message body for a given PR n
   )
   nock.enableNetConnect()
   nock.cleanAll()
+  unsetGitHubCoreFailed()
   t.end()
 })
 
-// TODO: @paambaati -- figure out why this test exits with error code 1 mysteriously only when run() is called.
-test.skip('🧪 main() should fail with an error if PR number cannot be found', async (t) => {
+test('🧪 run() should fail with an error if PR number cannot be found', async (t) => {
   t.plan(2)
   const context = {} as Context
   const outputLines = [] as Array<string>
@@ -132,6 +142,9 @@ test.skip('🧪 main() should fail with an error if PR number cannot be found', 
       outputLines.push(output)
     }
   )
+  t.teardown(() => {
+    outputHook.unhook()
+  })
   const result = await run({
     githubToken: FIXTURES.TOKEN,
     context,
@@ -144,11 +157,11 @@ test.skip('🧪 main() should fail with an error if PR number cannot be found', 
     outputLines[1].startsWith('::error::No pull request found.'),
     'should print correct error output'
   )
+  unsetGitHubCoreFailed()
   t.end()
 })
 
-// TODO: @paambaati -- figure out why this test exits with error code 1 mysteriously only when run() is called.
-test.skip("🧪 main() should fail with error name and message if there's an unknown exception", async (t) => {
+test("🧪 run() should fail with error name and message if there's an unknown exception", async (t) => {
   t.plan(2)
   nock.disableNetConnect()
   const outputLines = [] as Array<string>
@@ -161,6 +174,9 @@ test.skip("🧪 main() should fail with error name and message if there's an unk
       outputLines.push(output)
     }
   )
+  t.teardown(() => {
+    outputHook.unhook()
+  })
   // @ts-ignore -- GitHub contexts are actually wildly complex to type correctly.
   const context = (await FIXTURES.CONTEXT) as Context
   interceptGetWorkflowRuns().reply(500, 'Oops')
@@ -178,5 +194,6 @@ test.skip("🧪 main() should fail with error name and message if there's an unk
   )
   nock.enableNetConnect()
   nock.cleanAll()
+  unsetGitHubCoreFailed()
   t.end()
 })
