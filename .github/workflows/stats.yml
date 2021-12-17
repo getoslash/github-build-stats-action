@@ -17,5 +17,5 @@ jobs:
       - name: Build stats step
         uses: ./
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.OSLASH_BOT_GITHUB_TOKEN }}
           workflowId: main.yml
